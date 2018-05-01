@@ -90,6 +90,16 @@ def parse_dtype_info(flags):
   flags.loss_scale = flags.loss_scale or default_loss_scale
 
 
+def interpret_all_gpus(flags):
+  """Treat num_gpus=-1 as 'use all'."""
+  if "num_gpus" not in vars(flags) or flags.num_gpus != -1:
+    return
+  from tensorflow.python.client import device_lib  # pylint: disable=g-import-not-at-top
+  local_device_protos = device_lib.list_local_devices()
+  flags.num_gpus = sum(
+      [1 for d in local_device_protos if d.device_type == "GPU"])
+
+
 class BaseParser(argparse.ArgumentParser):
   """Parser to contain flags which will be nearly universal across models.
 

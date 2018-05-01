@@ -463,5 +463,6 @@ class ResnetArgParser(argparse.ArgumentParser):
 
     # handle coupling between dtype and loss_scale
     parsers.parse_dtype_info(args)
+    parsers.interpret_all_gpus(args)
 
     return args
